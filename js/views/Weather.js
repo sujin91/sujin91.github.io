@@ -20,7 +20,7 @@ function Weather () {
             this.temperature = data.main.temp
             this.place = data.name
 
-            this.render()
+            this.$weather.innerText = `${this.temperature} @ ${this.place}`
         }
         catch(error) {
             throw new Error(error)
@@ -34,13 +34,15 @@ function Weather () {
     this.getCoords = () => {
         if(this.coords === null) {
             this.setCoords()
+            location.reload(true);
         }
         else {
             this.getWeather(this.coords.latitude, this.coords.longitude)
         }
     } 
-    this.setCoords = () => {
-        navigator.geolocation.getCurrentPosition(this.handleGeoSuccess, this.handleGeoError)
+
+    this.setCoords = async () => {
+        await navigator.geolocation.getCurrentPosition(this.handleGeoSuccess, this.handleGeoError)
     }
 
     this.handleGeoSuccess = position => {
@@ -54,10 +56,6 @@ function Weather () {
 
     this.handleGeoError = () => {
         console.log('GeoError')
-    }
-
-    this.render = () => {
-        this.$weather.innerText = `${this.temperature} @ ${this.place}`
     }
 
     this.init()
